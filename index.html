@@ -1,1 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dragonbane PBP - Roller & Iniciativa</title>
+  <style>
+    :root {
+      --bg: #121212;
+      --card: #1e1e1e;
+      --accent: #d97706;
+      --text: #f3f4f6;
+      --border: #333;
+    }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .card {
+      background: var(--card);
+      padding: 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+    h2 {
+      margin: 0 0 10px 0;
+      color: var(--accent);
+      font-size: 1.1rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 6px;
+    }
+    label {
+      display: block;
+      font-size: 0.8rem;
+      margin-bottom: 4px;
+      color: #aaa;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      background: #000;
+      color: #fff;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+    }
+    .row {
+      display: flex;
+      gap: 8px;
+    }
+    .col {
+      flex: 1;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 8px;
+    }
+    button {
+      background: #2a2a2a;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 10px;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    button:active {
+      background: var(--accent);
+    }
+    .btn-main {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      width: 100%;
+      padding: 12px;
+      font-size: 1rem;
+      margin-top: 8px;
+    }
+    .btn-wa {
+      background: #25D366;
+      color: #fff;
+      border: none;
+      width: 100%;
+      padding: 10px;
+      font-weight: bold;
+      margin-top: 8px;
+    }
+    #result-box {
+      background: #000;
+      padding: 12px;
+      border-radius: 6px;
+      text-align: center;
+      min-height: 48px;
+      margin-top: 10px;
+      font-size: 0.95rem;
+      border: 1px dashed var(--border);
+    }
+    ol {
+      padding-left: 20px;
+      margin: 8px 0;
+    }
+    li {
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
 
+  <!-- CONFIGURACIÓN DE JUGADOR -->
+  <div class="card">
+    <label>Nombre del Jugador / Personaje:</label>
+    <input type="text" id="player-name" placeholder="Ej: Grim - El Enano">
+  </div>
+
+  <!-- SECCIÓN D20 -->
+  <div class="card">
+    <h2>🎲 Tirada D20 (Dragonbane)</h2>
+    <div class="row">
+      <div class="col">
+        <label>Modo de Tirada</label>
+        <select id="d20-mode">
+          <option value="normal">Normal (1 D20)</option>
+          <option value="ventaja">Ventaja</option>
+          <option value="desventaja">Desventaja</option>
+        </select>
+      </div>
+      <div class="col">
+        <label>Nivel (Vent/Desv)</label>
+        <select id="d20-level">
+          <option value="1">1 (2 dados)</option>
+          <option value="2">2 (3 dados)</option>
+          <option value="3">3 (4 dados)</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn-main" onclick="rollD20()">Tirar D20</button>
+  </div>
+
+  <!-- SECCIÓN OTROS DADOS -->
+  <div class="card">
+    <h2>🎲 Otros Dados (Daño / Habilidades)</h2>
+    <div class="row">
+      <div class="col">
+        <label>Cantidad de dados</label>
+        <input type="number" id="dice-count" value="1" min="1" max="20">
+      </div>
+    </div>
+    <div class="grid">
+      <button onclick="rollOther(4)">D4</button>
+      <button onclick="rollOther(6)">D6</button>
+      <button onclick="rollOther(8)">D8</button>
+      <button onclick="rollOther(10)">D10</button>
+      <button onclick="rollOther(12)">D12</button>
+    </div>
+  </div>
+
+  <!-- PANEL DE RESULTADOS -->
+  <div class="card">
+    <h2>📋 Resultado</h2>
+    <div id="result-box">Realiza una tirada para ver el resultado</div>
+    <button id="btn-share-dice" class="btn-wa" style="display:none;" onclick="shareText(lastDiceText)">📲 Compartir en WhatsApp</button>
+  </div>
+
+  <!-- SECCIÓN INICIATIVA (DM) -->
+  <div class="card">
+    <h2>⚔️ Generador de Turnos (DM)</h2>
+    <div class="row">
+      <div class="col">
+        <label>N° Jugadores</label>
+        <input type="number" id="num-pj" value="5" min="1">
+      </div>
+      <div class="col">
+        <label>N° Enemigos</label>
+        <input type="number" id="num-ene" value="3" min="0">
+      </div>
+    </div>
+    <button class="btn-main" onclick="generateInitiative()">Generar Orden</button>
+    
+    <div id="init-result" style="display:none; margin-top:10px;">
+      <ol id="init-list"></ol>
+      <button class="btn-wa" onclick="shareText(lastInitText)">📲 Compartir Iniciativa en WhatsApp</button>
+    </div>
+  </div>
+
+  <script>
+    // REEMPLAZA ESTA URL CON LA DE TU GOOGLE APPS SCRIPT CUANDO LA CREES:
+    const GOOGLE_SHEET_URL = "URL_DE_TU_APPS_SCRIPT_AQUI";
+
+    let lastDiceText = '';
+    let lastInitText = '';
+
+    // Persistir nombre del jugador localmente
+    const nameInput = document.getElementById('player-name');
+    nameInput.value = localStorage.getItem('db_player_name') || '';
+    nameInput.addEventListener('change', e => localStorage.setItem('db_player_name', e.target.value));
+
+    function getPlayerName() {
+      return nameInput.value.trim() || 'Anónimo';
+    }
+
+    function sendToSheet(dado, resultado) {
+      if (!GOOGLE_SHEET_URL || GOOGLE_SHEET_URL.includes("URL_DE_TU_APPS_SCRIPT")) return;
+      fetch(GOOGLE_SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          jugador: getPlayerName(),
+          dado: dado,
+          resultado: resultado
+        })
+      }).catch(err => console.error("Error al registrar en Sheet:", err));
+    }
+
+    function rollD20() {
+      const mode = document.getElementById('d20-mode').value;
+      const level = parseInt(document.getElementById('d20-level').value);
+      const player = getPlayerName();
+      
+      let numDice = mode === 'normal' ? 1 : 1 + level;
+      let rolls = [];
+      for (let i = 0; i < numDice; i++) {
+        rolls.push(Math.floor(Math.random() * 20) + 1);
+      }
+
+      let chosen = rolls[0];
+      if (mode === 'ventaja') {
+        chosen = Math.min(...rolls); // En Dragonbane D20 bajo es mejor
+      } else if (mode === 'desventaja') {
+        chosen = Math.max(...rolls);
+      }
+
+      let modeTag = mode === 'normal' ? 'Normal' : `${mode.toUpperCase()} (x${level})`;
+      let textWA = `🎲 *Tirada D20 (${modeTag}) - ${player}*\nDados: [${rolls.join(', ')}]\nResultado a elegir: *[${chosen}]*`;
+      let textExcel = `Dados: [${rolls.join(', ')}] -> Elegido: ${chosen}`;
+
+      lastDiceText = textWA;
+      document.getElementById('result-box').innerHTML = textWA.replace(/\n/g, '<br>').replace(/\*(.*?)\*/g, '<b>$1</b>');
+      document.getElementById('btn-share-dice').style.display = 'block';
+
+      sendToSheet(`D20 (${modeTag})`, textExcel);
+    }
+
+    function rollOther(faces) {
+      const count = parseInt(document.getElementById('dice-count').value) || 1;
+      const player = getPlayerName();
+      
+      let rolls = [];
+      let total = 0;
+      for (let i = 0; i < count; i++) {
+        let r = Math.floor(Math.random() * faces) + 1;
+        rolls.push(r);
+        total += r;
+      }
+
+      let textWA = `🎲 *Tirada ${count}D${faces} - ${player}*\nDados: [${rolls.join(', ')}]\nTotal: *[${total}]*`;
+      let textExcel = `Dados: [${rolls.join(', ')}] -> Total: ${total}`;
+
+      lastDiceText = textWA;
+      document.getElementById('result-box').innerHTML = textWA.replace(/\n/g, '<br>').replace(/\*(.*?)\*/g, '<b>$1</b>');
+      document.getElementById('btn-share-dice').style.display = 'block';
+
+      sendToSheet(`${count}D${faces}`, textExcel);
+    }
+
+    function generateInitiative() {
+      const numPj = parseInt(document.getElementById('num-pj').value) || 0;
+      const numEne = parseInt(document.getElementById('num-ene').value) || 0;
+      
+      const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      let turnos = [];
+
+      for (let i = 0; i < numPj; i++) {
+        let letter = letters[i] || (i + 1);
+        turnos.push(`Jugador ${letter}`);
+      }
+      for (let i = 1; i <= numEne; i++) {
+        turnos.push(`Enemigo ${i}`);
+      }
+
+      // Algoritmo Fisher-Yates (Mezcla aleatoria)
+      for (let i = turnos.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [turnos[i], turnos[j]] = [turnos[j], turnos[i]];
+      }
+
+      let htmlList = document.getElementById('init-list');
+      htmlList.innerHTML = '';
+      let waText = '⚔️ *ORDEN DE INICIATIVA*\n';
+
+      turnos.forEach((item, index) => {
+        let li = document.createElement('li');
+        li.textContent = item;
+        htmlList.appendChild(li);
+        waText += `${index + 1}. ${item}\n`;
+      });
+
+      lastInitText = waText;
+      document.getElementById('init-result').style.display = 'block';
+    }
+
+    function shareText(text) {
+      if (!text) return;
+      let url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+      window.open(url, '_blank');
+    }
+  </script>
+</body>
+</html>
