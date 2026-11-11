@@ -3,20 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dragonbane PBP - Roller</title>
+  <title>Dragonbane PBP - Lanzador</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=MedievalSharp&family=Spectral:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-dark: #0d0b0a;
-      --card-bg: #1c1815;
-      --card-border: #4a3b2c;
-      --gold-accent: #c88b36;
-      --text-main: #e8dec8;
-      --text-muted: #a3927c;
-      --input-bg: #110e0c;
+      --bg-dark: #12100e;
+      --card-bg: #1a1613;
+      --card-border: #382e26;
+      --gold-accent: #b8860b;
+      --text-main: #dcd0c0;
+      --text-muted: #8c7d6d;
+      --input-bg: #14110f;
     }
+    
     body {
-      font-family: serif;
+      font-family: 'Spectral', serif;
       background-color: var(--bg-dark);
+      background-image: radial-gradient(#201c18 1px, transparent 0);
+      background-size: 20px 20px;
       color: var(--text-main);
       margin: 0;
       padding: 16px;
@@ -27,41 +33,60 @@
       margin-left: auto;
       margin-right: auto;
     }
-    .card {
-      background: var(--card-bg);
-      padding: 16px;
-      border-radius: 4px;
-      border: 2px solid var(--card-border);
-    }
+
     h2 {
+      font-family: 'Cinzel', serif;
       margin: 0 0 12px 0;
       color: var(--gold-accent);
-      font-size: 1.1rem;
+      font-size: 1rem;
       border-bottom: 1px solid var(--card-border);
       padding-bottom: 6px;
       text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
+
+    .card {
+      background: var(--card-bg);
+      padding: 16px;
+      border-radius: 2px;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+    }
+
     label {
       display: block;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       margin-bottom: 4px;
       color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
+
     input, select {
       width: 100%;
-      padding: 9px;
+      padding: 8px;
       background: var(--input-bg);
       color: var(--text-main);
       border: 1px solid var(--card-border);
-      border-radius: 3px;
+      border-radius: 2px;
       box-sizing: border-box;
       margin-bottom: 10px;
+      font-family: 'Spectral', serif;
+      font-size: 0.95rem;
     }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--gold-accent);
+    }
+
+    /* 50/50 DOS COLUMNAS EN PANTALLAS GRANDES */
     .columns-row {
       display: flex;
       flex-direction: column;
       gap: 16px;
     }
+
     @media (min-width: 650px) {
       .columns-row {
         flex-direction: row;
@@ -70,75 +95,129 @@
         flex: 1;
       }
     }
-    .row { display: flex; gap: 8px; }
-    .col { flex: 1; }
-    .btn-main {
-      background: linear-gradient(180deg, #c88b36 0%, #8a5a1b 100%);
-      color: #000;
-      border: 1px solid #e09f45;
-      width: 100%;
-      padding: 12px;
-      font-size: 0.95rem;
-      font-weight: bold;
+
+    .row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .col {
+      flex: 1;
+    }
+
+    button {
+      background: #26201b;
+      color: var(--text-main);
+      border: 1px solid var(--card-border);
+      padding: 10px;
+      border-radius: 2px;
+      font-family: 'Cinzel', serif;
+      font-weight: 600;
+      font-size: 0.85rem;
       cursor: pointer;
       text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: background 0.2s;
     }
+
+    button:hover {
+      background: #332a22;
+      border-color: var(--gold-accent);
+    }
+
+    .btn-main {
+      background: linear-gradient(180deg, #3d3126 0%, #231c15 100%);
+      border: 1px solid var(--gold-accent);
+      color: #f0e6d2;
+      width: 100%;
+      padding: 11px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    .btn-main:hover {
+      background: linear-gradient(180deg, #4d3e30 0%, #2d241c 100%);
+    }
+
     .btn-wa {
-      background: #25D366;
-      color: #000;
-      border: none;
+      background: #173b22;
+      color: #b4f0c6;
+      border: 1px solid #285e37;
       width: 100%;
       padding: 10px;
-      font-weight: bold;
+      font-family: 'Cinzel', serif;
       margin-top: 8px;
-      cursor: pointer;
     }
+
+    .btn-wa:hover {
+      background: #1e4d2d;
+    }
+
     #result-box {
-      background: #090807;
-      padding: 14px;
-      border-radius: 3px;
+      background: #14110f;
+      padding: 12px;
+      border-radius: 2px;
       text-align: center;
-      min-height: 48px;
+      min-height: 44px;
       margin-top: 10px;
-      border: 1px dashed var(--card-border);
+      font-size: 0.95rem;
+      border: 1px solid var(--card-border);
+      color: #dfd5c3;
+      font-family: 'MedievalSharp', cursive;
+    }
+
+    ol {
+      padding-left: 20px;
+      margin: 8px 0;
+      font-size: 0.95rem;
+    }
+
+    li {
+      margin-bottom: 4px;
     }
   </style>
 </head>
 <body>
 
+  <!-- JUGADOR -->
   <div class="card">
-    <label>Nombre del Personaje:</label>
+    <label>Nombre del Personaje</label>
     <input type="text" id="player-name" placeholder="Ej: Rayo, Trueno, Árbol...">
   </div>
 
+  <!-- D20 Y DAÑO (50/50) -->
   <div class="columns-row">
+    
+    <!-- D20 -->
     <div class="card">
       <h2>🎲 Tirada D20</h2>
       <div class="row">
         <div class="col">
           <label>Modo</label>
           <select id="d20-mode">
-            <option value="normal">Normal</option>
+            <option value="normal">Normal (1 Dado)</option>
             <option value="ventaja">Ventaja</option>
             <option value="desventaja">Desventaja</option>
           </select>
         </div>
         <div class="col">
-          <label>Nivel</label>
+          <label>Dados Adicionales</label>
           <select id="d20-level">
-            <option value="1">Nivel 1</option>
-            <option value="2">Nivel 2</option>
-            <option value="3">Nivel 3</option>
+            <option value="1">1 Dado Extra</option>
+            <option value="2">2 Dados Extra</option>
+            <option value="3">3 Dados Extra</option>
           </select>
         </div>
       </div>
       <button class="btn-main" onclick="rollD20()">Tirar D20</button>
     </div>
 
+    <!-- DAÑO -->
     <div class="card">
       <h2>⚔️ Tirada de Daño</h2>
       <div class="row">
-        <div class="col" style="flex: 0.5;">
+        <div class="col" style="flex: 0.6;">
           <label>Cant.</label>
           <input type="number" id="weapon-count" value="1" min="1" max="10">
         </div>
@@ -154,7 +233,7 @@
         </div>
       </div>
       <div>
-        <label>Dado Extra</label>
+        <label>Dado Extra (Bono)</label>
         <select id="extra-damage">
           <option value="0">Ninguno</option>
           <option value="4">+ 1 D4</option>
@@ -163,66 +242,159 @@
       </div>
       <button class="btn-main" onclick="rollDamage()">Tirar Daño</button>
     </div>
+
   </div>
 
+  <!-- RESULTADO -->
   <div class="card">
     <h2>📜 Resultado</h2>
-    <div id="result-box">Haz una tirada para ver el resultado</div>
-    <button id="btn-share-dice" class="btn-wa" style="display:none;" onclick="shareText()">📲 Compartir en WhatsApp</button>
+    <div id="result-box">Realiza una tirada</div>
+    <button id="btn-share-dice" class="btn-wa" style="display:none;" onclick="shareText(lastDiceText)">📲 Compartir en WhatsApp</button>
+  </div>
+
+  <!-- INICIATIVA -->
+  <div class="card">
+    <h2>⚔️ Generador de Iniciativa (DM)</h2>
+    <div class="row">
+      <div class="col">
+        <label>N° Jugadores</label>
+        <input type="number" id="num-pj" value="5" min="1">
+      </div>
+      <div class="col">
+        <label>N° Enemigos</label>
+        <input type="number" id="num-ene" value="3" min="0">
+      </div>
+    </div>
+    <button class="btn-main" onclick="generateInitiative()">Generar Orden</button>
+    
+    <div id="init-result" style="display:none; margin-top:10px;">
+      <ol id="init-list"></ol>
+      <button class="btn-wa" onclick="shareText(lastInitText)">📲 Compartir Iniciativa</button>
+    </div>
   </div>
 
   <script>
     const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbwN5_G_HUel5t66XkeXSkrtomcIY1ALEYZ9b7gMbwaxtdSgKIoPpzfP3gzkNUmViFmNcA/exec";
-    let lastText = '';
+    let lastDiceText = '';
+    let lastInitText = '';
+
+    const nameInput = document.getElementById('player-name');
+    nameInput.value = localStorage.getItem('db_player_name') || '';
+    nameInput.addEventListener('change', e => localStorage.setItem('db_player_name', e.target.value));
 
     function getPlayerName() {
-      return document.getElementById('player-name').value.trim();
+      return nameInput.value.trim();
+    }
+
+    function sendToSheet(dado, resultado) {
+      const name = getPlayerName();
+      if (!name) return;
+      if (!GOOGLE_SHEET_URL || GOOGLE_SHEET_URL.includes("URL_DE_TU_APPS_SCRIPT")) return;
+      fetch(GOOGLE_SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ jugador: name, dado: dado, resultado: resultado })
+      }).catch(err => console.error("Error Sheet:", err));
     }
 
     function rollD20() {
-      const name = getPlayerName();
-      if (!name) { alert("Escribe tu nombre"); return; }
+      const player = getPlayerName();
+      if (!player) { alert("Escribe el nombre de tu personaje."); return; }
+
       const mode = document.getElementById('d20-mode').value;
       const level = parseInt(document.getElementById('d20-level').value);
-      let num = mode === 'normal' ? 1 : 1 + level;
-      let rolls = [];
-      for(let i=0; i<num; i++) rolls.push(Math.floor(Math.random()*20)+1);
-      let chosen = mode === 'ventaja' ? Math.min(...rolls) : (mode === 'desventaja' ? Math.max(...rolls) : rolls[0]);
       
-      lastText = `🎲 D20 (${mode}) - ${name}\nDados: [${rolls.join(', ')}]\nResultado: *[${chosen}]*`;
-      document.getElementById('result-box').innerText = lastText;
+      let numDice = mode === 'normal' ? 1 : 1 + level;
+      let rolls = [];
+      for (let i = 0; i < numDice; i++) {
+        rolls.push(Math.floor(Math.random() * 20) + 1);
+      }
+
+      let chosen = rolls[0];
+      if (mode === 'ventaja') chosen = Math.min(...rolls);
+      else if (mode === 'desventaja') chosen = Math.max(...rolls);
+
+      let modeTag = mode === 'normal' ? 'Normal' : `${mode.toUpperCase()} (${level} Adic.)`;
+      let textWA = `🎲 *D20 (${modeTag}) - ${player}*\nDados: [${rolls.join(', ')}]\nResultado: *[${chosen}]*`;
+      let textExcel = `Dados: [${rolls.join(', ')}] -> Elegido: ${chosen}`;
+
+      lastDiceText = textWA;
+      document.getElementById('result-box').innerHTML = textWA.replace(/\n/g, '<br>').replace(/\*(.*?)\*/g, '<b>$1</b>');
       document.getElementById('btn-share-dice').style.display = 'block';
+
+      sendToSheet(`D20 (${modeTag})`, textExcel);
     }
 
     function rollDamage() {
-      const name = getPlayerName();
-      if (!name) { alert("Escribe tu nombre"); return; }
-      const count = parseInt(document.getElementById('weapon-count').value) || 1;
-      const faces = parseInt(document.getElementById('weapon-dice').value);
-      const extra = parseInt(document.getElementById('extra-damage').value);
-      
-      let rolls = [];
-      let total = 0;
-      for(let i=0; i<count; i++) {
-        let r = Math.floor(Math.random()*faces)+1;
-        rolls.push(r);
-        total += r;
+      const player = getPlayerName();
+      if (!player) { alert("Escribe el nombre de tu personaje."); return; }
+
+      const count = Math.max(1, parseInt(document.getElementById('weapon-count').value) || 1);
+      const weaponFaces = parseInt(document.getElementById('weapon-dice').value);
+      const extraFaces = parseInt(document.getElementById('extra-damage').value);
+
+      let weaponRolls = [];
+      let totalSum = 0;
+
+      for (let i = 0; i < count; i++) {
+        let r = Math.floor(Math.random() * weaponFaces) + 1;
+        weaponRolls.push(r);
+        totalSum += r;
       }
-      let desc = `${count}D${faces}: [${rolls.join(', ')}]`;
-      if(extra > 0) {
-        let extR = Math.floor(Math.random()*extra)+1;
-        total += extR;
-        desc += ` | +1D${extra}: [${extR}]`;
+
+      let rollDesc = `${count}D${weaponFaces}: [${weaponRolls.join(', ')}]`;
+      let diceHeader = `${count}D${weaponFaces}`;
+
+      if (extraFaces > 0) {
+        let extraRoll = Math.floor(Math.random() * extraFaces) + 1;
+        totalSum += extraRoll;
+        rollDesc += ` | +1D${extraFaces}: [${extraRoll}]`;
+        diceHeader += ` + 1D${extraFaces}`;
       }
-      
-      lastText = `⚔️ Daño - ${name}\n${desc}\nTotal: *[${total}]*`;
-      document.getElementById('result-box').innerText = lastText;
+
+      let textWA = `⚔️ *Daño (${diceHeader}) - ${player}*\n${rollDesc}\nTotal: *[${totalSum}]*`;
+      let textExcel = `${rollDesc} -> Total: ${totalSum}`;
+
+      lastDiceText = textWA;
+      document.getElementById('result-box').innerHTML = textWA.replace(/\n/g, '<br>').replace(/\*(.*?)\*/g, '<b>$1</b>');
       document.getElementById('btn-share-dice').style.display = 'block';
+
+      sendToSheet(`Daño (${diceHeader})`, textExcel);
     }
 
-    function shareText() {
-      if(!lastText) return;
-      window.open(`https://wa.me/?text=${encodeURIComponent(lastText)}`, '_blank');
+    function generateInitiative() {
+      const numPj = parseInt(document.getElementById('num-pj').value) || 0;
+      const numEne = parseInt(document.getElementById('num-ene').value) || 0;
+      const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      let turnos = [];
+
+      for (let i = 0; i < numPj; i++) turnos.push(`Jugador ${letters[i] || (i + 1)}`);
+      for (let i = 1; i <= numEne; i++) turnos.push(`Enemigo ${i}`);
+
+      for (let i = turnos.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [turnos[i], turnos[j]] = [turnos[j], turnos[i]];
+      }
+
+      let htmlList = document.getElementById('init-list');
+      htmlList.innerHTML = '';
+      let waText = '⚔️ *ORDEN DE INICIATIVA*\n';
+
+      turnos.forEach((item, index) => {
+        let li = document.createElement('li');
+        li.textContent = item;
+        htmlList.appendChild(li);
+        waText += `${index + 1}. ${item}\n`;
+      });
+
+      lastInitText = waText;
+      document.getElementById('init-result').style.display = 'block';
+    }
+
+    function shareText(text) {
+      if (!text) return;
+      window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
     }
   </script>
 </body>
