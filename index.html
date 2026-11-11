@@ -58,11 +58,16 @@
     .col {
       flex: 1;
     }
-    .grid {
+    .dice-mix-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-top: 8px;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      text-align: center;
+    }
+    .dice-mix-item label {
+      font-weight: bold;
+      color: var(--accent);
+      margin-bottom: 2px;
     }
     button {
       background: #2a2a2a;
@@ -127,41 +132,60 @@
     <h2>🎲 Tirada D20 (Dragonbane)</h2>
     <div class="row">
       <div class="col">
-        <label>Modo de Tirada</label>
+        <label>Modo</label>
         <select id="d20-mode">
-          <option value="normal">Normal (1 D20)</option>
+          <option value="normal">Normal</option>
           <option value="ventaja">Ventaja</option>
           <option value="desventaja">Desventaja</option>
         </select>
       </div>
       <div class="col">
-        <label>Nivel (Vent/Desv)</label>
+        <label>Nivel Vent/Desv</label>
         <select id="d20-level">
           <option value="1">1 (2 dados)</option>
           <option value="2">2 (3 dados)</option>
           <option value="3">3 (4 dados)</option>
         </select>
       </div>
+      <div class="col">
+        <label>Modificador / Bono</label>
+        <input type="number" id="d20-bonus" value="0" placeholder="+/-">
+      </div>
     </div>
     <button class="btn-main" onclick="rollD20()">Tirar D20</button>
   </div>
 
-  <!-- SECCIÓN OTROS DADOS -->
+  <!-- SECCIÓN OTROS DADOS (MIX DE DADOS Y DAÑO) -->
   <div class="card">
-    <h2>🎲 Otros Dados (Daño / Habilidades)</h2>
-    <div class="row">
-      <div class="col">
-        <label>Cantidad de dados</label>
-        <input type="number" id="dice-count" value="1" min="1" max="20">
+    <h2>🎲 Tirada de Daño / Mezcla de Dados</h2>
+    <label>Elige la cantidad de cada dado a tirar:</label>
+    <div class="dice-mix-grid">
+      <div class="dice-mix-item">
+        <label>D4</label>
+        <input type="number" id="count-d4" value="0" min="0" max="10">
+      </div>
+      <div class="dice-mix-item">
+        <label>D6</label>
+        <input type="number" id="count-d6" value="0" min="0" max="10">
+      </div>
+      <div class="dice-mix-item">
+        <label>D8</label>
+        <input type="number" id="count-d8" value="0" min="0" max="10">
+      </div>
+      <div class="dice-mix-item">
+        <label>D10</label>
+        <input type="number" id="count-d10" value="0" min="0" max="10">
+      </div>
+      <div class="dice-mix-item">
+        <label>D12</label>
+        <input type="number" id="count-d12" value="0" min="0" max="10">
       </div>
     </div>
-    <div class="grid">
-      <button onclick="rollOther(4)">D4</button>
-      <button onclick="rollOther(6)">D6</button>
-      <button onclick="rollOther(8)">D8</button>
-      <button onclick="rollOther(10)">D10</button>
-      <button onclick="rollOther(12)">D12</button>
+    <div style="margin-top: 4px;">
+      <label>Bono extra al total de daño:</label>
+      <input type="number" id="other-bonus" value="0" placeholder="Ej: +2">
     </div>
+    <button class="btn-main" onclick="rollMixedDice()">Tirar Dados Combinados</button>
   </div>
 
   <!-- PANEL DE RESULTADOS -->
@@ -193,13 +217,12 @@
   </div>
 
   <script>
-    // REEMPLAZA ESTA URL CON LA DE TU GOOGLE APPS SCRIPT CUANDO LA CREES:
+    // PEGA AQUÍ TU URL DE GOOGLE APPS SCRIPT:
     const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbwN5_G_HUel5t66XkeXSkrtomcIY1ALEYZ9b7gMbwaxtdSgKIoPpzfP3gzkNUmViFmNcA/exec";
 
     let lastDiceText = '';
     let lastInitText = '';
 
-    // Persistir nombre del jugador localmente
     const nameInput = document.getElementById('player-name');
     nameInput.value = localStorage.getItem('db_player_name') || '';
     nameInput.addEventListener('change', e => localStorage.setItem('db_player_name', e.target.value));
@@ -225,6 +248,7 @@
     function rollD20() {
       const mode = document.getElementById('d20-mode').value;
       const level = parseInt(document.getElementById('d20-level').value);
+      const bonus = parseInt(document.getElementById('d20-bonus').value) || 0;
       const player = getPlayerName();
       
       let numDice = mode === 'normal' ? 1 : 1 + level;
@@ -233,44 +257,67 @@
         rolls.push(Math.floor(Math.random() * 20) + 1);
       }
 
-      let chosen = rolls[0];
+      let rawChosen = rolls[0];
       if (mode === 'ventaja') {
-        chosen = Math.min(...rolls); // En Dragonbane D20 bajo es mejor
+        rawChosen = Math.min(...rolls);
       } else if (mode === 'desventaja') {
-        chosen = Math.max(...rolls);
+        rawChosen = Math.max(...rolls);
       }
 
+      let finalVal = rawChosen + bonus;
       let modeTag = mode === 'normal' ? 'Normal' : `${mode.toUpperCase()} (x${level})`;
-      let textWA = `🎲 *Tirada D20 (${modeTag}) - ${player}*\nDados: [${rolls.join(', ')}]\nResultado a elegir: *[${chosen}]*`;
-      let textExcel = `Dados: [${rolls.join(', ')}] -> Elegido: ${chosen}`;
+      let bonusText = bonus !== 0 ? (bonus > 0 ? ` +${bonus}` : ` ${bonus}`) : '';
+      
+      let textWA = `🎲 *Tirada D20 (${modeTag}${bonusText}) - ${player}*\nDados: [${rolls.join(', ')}]\nResultado: *[${finalVal}]*` + (bonus !== 0 ? ` (Base ${rawChosen}${bonusText})` : '');
+      let textExcel = `Dados: [${rolls.join(', ')}] -> Elegido: ${rawChosen}${bonusText} = ${finalVal}`;
 
       lastDiceText = textWA;
       document.getElementById('result-box').innerHTML = textWA.replace(/\n/g, '<br>').replace(/\*(.*?)\*/g, '<b>$1</b>');
       document.getElementById('btn-share-dice').style.display = 'block';
 
-      sendToSheet(`D20 (${modeTag})`, textExcel);
+      sendToSheet(`D20 (${modeTag}${bonusText})`, textExcel);
     }
 
-    function rollOther(faces) {
-      const count = parseInt(document.getElementById('dice-count').value) || 1;
+    function rollMixedDice() {
+      const diceTypes = [4, 6, 8, 10, 12];
       const player = getPlayerName();
+      const bonus = parseInt(document.getElementById('other-bonus').value) || 0;
       
-      let rolls = [];
-      let total = 0;
-      for (let i = 0; i < count; i++) {
-        let r = Math.floor(Math.random() * faces) + 1;
-        rolls.push(r);
-        total += r;
+      let allRollsText = [];
+      let totalSum = 0;
+      let summaryTypes = [];
+
+      diceTypes.forEach(faces => {
+        let count = parseInt(document.getElementById(`count-d4` ? document.getElementById(`count-d${faces}`).value : 0)) || 0;
+        if (count > 0) {
+          summaryTypes.push(`${count}D${faces}`);
+          let currentRolls = [];
+          for (let i = 0; i < count; i++) {
+            let r = Math.floor(Math.random() * faces) + 1;
+            currentRolls.push(r);
+            totalSum += r;
+          }
+          allRollsText.push(`${count}D${faces}: [${currentRolls.join(', ')}]`);
+        }
+      });
+
+      if (summaryTypes.length === 0 && bonus === 0) {
+        alert("Por favor selecciona al menos 1 dado o un bono.");
+        return;
       }
 
-      let textWA = `🎲 *Tirada ${count}D${faces} - ${player}*\nDados: [${rolls.join(', ')}]\nTotal: *[${total}]*`;
-      let textExcel = `Dados: [${rolls.join(', ')}] -> Total: ${total}`;
+      totalSum += bonus;
+      let bonusText = bonus !== 0 ? (bonus > 0 ? ` +${bonus}` : ` ${bonus}`) : '';
+      let diceHeader = summaryTypes.length > 0 ? summaryTypes.join(' + ') : 'Bono';
+
+      let textWA = `🎲 *Tirada (${diceHeader}${bonusText}) - ${player}*\n${allRollsText.join('\n')}\nTotal: *[${totalSum}]*`;
+      let textExcel = `${allRollsText.join(' | ')}${bonusText} -> Total: ${totalSum}`;
 
       lastDiceText = textWA;
       document.getElementById('result-box').innerHTML = textWA.replace(/\n/g, '<br>').replace(/\*(.*?)\*/g, '<b>$1</b>');
       document.getElementById('btn-share-dice').style.display = 'block';
 
-      sendToSheet(`${count}D${faces}`, textExcel);
+      sendToSheet(`Mezcla (${diceHeader}${bonusText})`, textExcel);
     }
 
     function generateInitiative() {
@@ -288,7 +335,6 @@
         turnos.push(`Enemigo ${i}`);
       }
 
-      // Algoritmo Fisher-Yates (Mezcla aleatoria)
       for (let i = turnos.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [turnos[i], turnos[j]] = [turnos[j], turnos[i]];
