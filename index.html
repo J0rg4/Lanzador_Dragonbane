@@ -147,18 +147,18 @@
           <option value="3">3 (4 dados)</option>
         </select>
       </div>
-      <div class="col">
-        <label>Modificador / Bono</label>
-        <input type="number" id="d20-bonus" value="0" placeholder="+/-">
-      </div>
+    </div>
+    <div>
+      <label>Bono a la tirada (Ej: +2, -1, etc.)</label>
+      <input type="number" id="d20-bonus" value="0">
     </div>
     <button class="btn-main" onclick="rollD20()">Tirar D20</button>
   </div>
 
-  <!-- SECCIÓN OTROS DADOS (MIX DE DADOS Y DAÑO) -->
+  <!-- SECCIÓN OTROS DADOS / DAÑO COMBINADO -->
   <div class="card">
     <h2>🎲 Tirada de Daño / Mezcla de Dados</h2>
-    <label>Elige la cantidad de cada dado a tirar:</label>
+    <label>Elige cuántos dados de cada tipo quieres tirar (Ej: 2 D8 + 1 D4):</label>
     <div class="dice-mix-grid">
       <div class="dice-mix-item">
         <label>D4</label>
@@ -181,9 +181,9 @@
         <input type="number" id="count-d12" value="0" min="0" max="10">
       </div>
     </div>
-    <div style="margin-top: 4px;">
-      <label>Bono extra al total de daño:</label>
-      <input type="number" id="other-bonus" value="0" placeholder="Ej: +2">
+    <div style="margin-top: 8px;">
+      <label>Bono fijo al daño (Ej: +3 o -1):</label>
+      <input type="number" id="other-bonus" value="0">
     </div>
     <button class="btn-main" onclick="rollMixedDice()">Tirar Dados Combinados</button>
   </div>
@@ -217,7 +217,7 @@
   </div>
 
   <script>
-    // PEGA AQUÍ TU URL DE GOOGLE APPS SCRIPT:
+    // REEMPLAZA ESTA URL CON LA DE TU APPS SCRIPT:
     const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbwN5_G_HUel5t66XkeXSkrtomcIY1ALEYZ9b7gMbwaxtdSgKIoPpzfP3gzkNUmViFmNcA/exec";
 
     let lastDiceText = '';
@@ -268,7 +268,7 @@
       let modeTag = mode === 'normal' ? 'Normal' : `${mode.toUpperCase()} (x${level})`;
       let bonusText = bonus !== 0 ? (bonus > 0 ? ` +${bonus}` : ` ${bonus}`) : '';
       
-      let textWA = `🎲 *Tirada D20 (${modeTag}${bonusText}) - ${player}*\nDados: [${rolls.join(', ')}]\nResultado: *[${finalVal}]*` + (bonus !== 0 ? ` (Base ${rawChosen}${bonusText})` : '');
+      let textWA = `🎲 *Tirada D20 (${modeTag}${bonusText}) - ${player}*\nDados: [${rolls.join(', ')}]\nResultado: *[${finalVal}]*` + (bonus !== 0 ? ` (Elegido ${rawChosen}${bonusText})` : '');
       let textExcel = `Dados: [${rolls.join(', ')}] -> Elegido: ${rawChosen}${bonusText} = ${finalVal}`;
 
       lastDiceText = textWA;
@@ -288,7 +288,8 @@
       let summaryTypes = [];
 
       diceTypes.forEach(faces => {
-        let count = parseInt(document.getElementById(`count-d4` ? document.getElementById(`count-d${faces}`).value : 0)) || 0;
+        let countInput = document.getElementById(`count-d${faces}`);
+        let count = countInput ? (parseInt(countInput.value) || 0) : 0;
         if (count > 0) {
           summaryTypes.push(`${count}D${faces}`);
           let currentRolls = [];
@@ -302,7 +303,7 @@
       });
 
       if (summaryTypes.length === 0 && bonus === 0) {
-        alert("Por favor selecciona al menos 1 dado o un bono.");
+        alert("Por favor selecciona al menos 1 dado para tirar.");
         return;
       }
 
@@ -310,14 +311,14 @@
       let bonusText = bonus !== 0 ? (bonus > 0 ? ` +${bonus}` : ` ${bonus}`) : '';
       let diceHeader = summaryTypes.length > 0 ? summaryTypes.join(' + ') : 'Bono';
 
-      let textWA = `🎲 *Tirada (${diceHeader}${bonusText}) - ${player}*\n${allRollsText.join('\n')}\nTotal: *[${totalSum}]*`;
+      let textWA = `🎲 *Tirada Daño (${diceHeader}${bonusText}) - ${player}*\n${allRollsText.join('\n')}\nTotal Daño: *[${totalSum}]*`;
       let textExcel = `${allRollsText.join(' | ')}${bonusText} -> Total: ${totalSum}`;
 
       lastDiceText = textWA;
       document.getElementById('result-box').innerHTML = textWA.replace(/\n/g, '<br>').replace(/\*(.*?)\*/g, '<b>$1</b>');
       document.getElementById('btn-share-dice').style.display = 'block';
 
-      sendToSheet(`Mezcla (${diceHeader}${bonusText})`, textExcel);
+      sendToSheet(`Daño (${diceHeader}${bonusText})`, textExcel);
     }
 
     function generateInitiative() {
