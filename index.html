@@ -3,27 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dragonbane PBP - Lanzador</title>
+  <title>Dragonbane PBP - Roller</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=MedievalSharp&family=Spectral:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=MedievalSharp&family=Spectral:wght@500;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-dark: #12100e;
-      --card-bg: #1a1613;
-      --card-border: #382e26;
-      --gold-accent: #b8860b;
-      --text-main: #dcd0c0;
-      --text-muted: #8c7d6d;
-      --input-bg: #14110f;
+      --bg-bone: #e8dfca;
+      --card-bg: #f5efe1;
+      --card-border: #8c765c;
+      --green-dragon: #1b4d2e;
+      --red-dragon: #8b1e1e;
+      --text-dark: #241d18;
+      --text-muted: #5c4e40;
+      --input-bg: #fbf8f1;
     }
     
     body {
       font-family: 'Spectral', serif;
-      background-color: var(--bg-dark);
-      background-image: radial-gradient(#201c18 1px, transparent 0);
-      background-size: 20px 20px;
-      color: var(--text-main);
+      background-color: var(--bg-bone);
+      background-image: 
+        radial-gradient(#d4c5a9 1px, transparent 0),
+        radial-gradient(#c2b093 1px, transparent 0);
+      background-size: 24px 24px;
+      background-position: 0 0, 12px 12px;
+      color: var(--text-dark);
       margin: 0;
       padding: 16px;
       display: flex;
@@ -37,27 +41,28 @@
     h2 {
       font-family: 'Cinzel', serif;
       margin: 0 0 12px 0;
-      color: var(--gold-accent);
-      font-size: 1rem;
-      border-bottom: 1px solid var(--card-border);
-      padding-bottom: 6px;
+      color: var(--green-dragon);
+      font-size: 1.05rem;
+      border-bottom: 2px solid var(--card-border);
+      padding-bottom: 4px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.8px;
     }
 
     .card {
       background: var(--card-bg);
       padding: 16px;
-      border-radius: 2px;
-      border: 1px solid var(--card-border);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+      border-radius: 3px;
+      border: 2px solid var(--card-border);
+      box-shadow: inset 0 0 8px rgba(140, 118, 92, 0.2), 0 3px 8px rgba(0,0,0,0.15);
     }
 
     label {
       display: block;
       font-size: 0.8rem;
       margin-bottom: 4px;
-      color: var(--text-muted);
+      color: var(--red-dragon);
+      font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
@@ -66,21 +71,22 @@
       width: 100%;
       padding: 8px;
       background: var(--input-bg);
-      color: var(--text-main);
+      color: var(--text-dark);
       border: 1px solid var(--card-border);
       border-radius: 2px;
       box-sizing: border-box;
       margin-bottom: 10px;
       font-family: 'Spectral', serif;
       font-size: 0.95rem;
+      font-weight: 600;
     }
 
     input:focus, select:focus {
       outline: none;
-      border-color: var(--gold-accent);
+      border-color: var(--red-dragon);
     }
 
-    /* 50/50 DOS COLUMNAS EN PANTALLAS GRANDES */
+    /* CONTENEDOR DOBLE 50/50 */
     .columns-row {
       display: flex;
       flex-direction: column;
@@ -106,29 +112,28 @@
     }
 
     button {
-      background: #26201b;
-      color: var(--text-main);
-      border: 1px solid var(--card-border);
+      background: var(--green-dragon);
+      color: #f5efe1;
+      border: 1px solid #10301c;
       padding: 10px;
       border-radius: 2px;
       font-family: 'Cinzel', serif;
-      font-weight: 600;
+      font-weight: 700;
       font-size: 0.85rem;
       cursor: pointer;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      transition: background 0.2s;
+      transition: background 0.15s;
     }
 
     button:hover {
-      background: #332a22;
-      border-color: var(--gold-accent);
+      background: #25663e;
     }
 
     .btn-main {
-      background: linear-gradient(180deg, #3d3126 0%, #231c15 100%);
-      border: 1px solid var(--gold-accent);
-      color: #f0e6d2;
+      background: var(--red-dragon);
+      border: 1px solid #571212;
+      color: #f5efe1;
       width: 100%;
       padding: 11px;
       font-size: 0.9rem;
@@ -137,13 +142,13 @@
     }
 
     .btn-main:hover {
-      background: linear-gradient(180deg, #4d3e30 0%, #2d241c 100%);
+      background: #a62424;
     }
 
     .btn-wa {
-      background: #173b22;
-      color: #b4f0c6;
-      border: 1px solid #285e37;
+      background: #1e592f;
+      color: #ffffff;
+      border: 1px solid #11361c;
       width: 100%;
       padding: 10px;
       font-family: 'Cinzel', serif;
@@ -151,26 +156,26 @@
     }
 
     .btn-wa:hover {
-      background: #1e4d2d;
+      background: #256e3b;
     }
 
     #result-box {
-      background: #14110f;
+      background: #fbf8f1;
       padding: 12px;
       border-radius: 2px;
       text-align: center;
       min-height: 44px;
       margin-top: 10px;
-      font-size: 0.95rem;
-      border: 1px solid var(--card-border);
-      color: #dfd5c3;
+      font-size: 1rem;
+      border: 1px dashed var(--card-border);
+      color: var(--text-dark);
       font-family: 'MedievalSharp', cursive;
     }
 
     ol {
       padding-left: 20px;
       margin: 8px 0;
-      font-size: 0.95rem;
+      font-weight: 600;
     }
 
     li {
@@ -252,20 +257,16 @@
     <button id="btn-share-dice" class="btn-wa" style="display:none;" onclick="shareText(lastDiceText)">📲 Compartir en WhatsApp</button>
   </div>
 
-  <!-- INICIATIVA -->
+  <!-- INICIATIVA CON NOMBRES REALES -->
   <div class="card">
     <h2>⚔️ Generador de Iniciativa (DM)</h2>
     <div class="row">
-      <div class="col">
-        <label>N° Jugadores</label>
-        <input type="number" id="num-pj" value="5" min="1">
-      </div>
       <div class="col">
         <label>N° Enemigos</label>
         <input type="number" id="num-ene" value="3" min="0">
       </div>
     </div>
-    <button class="btn-main" onclick="generateInitiative()">Generar Orden</button>
+    <button class="btn-main" onclick="generateInitiative()">Generar Orden con Jugadores Reales</button>
     
     <div id="init-result" style="display:none; margin-top:10px;">
       <ol id="init-list"></ol>
@@ -274,7 +275,9 @@
   </div>
 
   <script>
-    const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbwN5_G_HUel5t66XkeXSkrtomcIY1ALEYZ9b7gMbwaxtdSgKIoPpzfP3gzkNUmViFmNcA/exec";
+    // PEGA AQUÍ TU URL DE GOOGLE APPS SCRIPT:
+    const GOOGLE_SHEET_URL = "URL_DE_TU_APPS_SCRIPT_AQUI";
+    
     let lastDiceText = '';
     let lastInitText = '';
 
@@ -363,15 +366,34 @@
       sendToSheet(`Daño (${diceHeader})`, textExcel);
     }
 
-    function generateInitiative() {
-      const numPj = parseInt(document.getElementById('num-pj').value) || 0;
+    async function generateInitiative() {
       const numEne = parseInt(document.getElementById('num-ene').value) || 0;
-      const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-      let turnos = [];
+      let jugadores = [];
 
-      for (let i = 0; i < numPj; i++) turnos.push(`Jugador ${letters[i] || (i + 1)}`);
-      for (let i = 1; i <= numEne; i++) turnos.push(`Enemigo ${i}`);
+      // Intentar obtener los jugadores reales desde Google Sheets
+      if (GOOGLE_SHEET_URL && !GOOGLE_SHEET_URL.includes("URL_DE_TU_APPS_SCRIPT")) {
+        try {
+          let res = await fetch(`${GOOGLE_SHEET_URL}?action=getJugadores`);
+          let data = await res.json();
+          if (data && data.jugadores && data.jugadores.length > 0) {
+            jugadores = data.jugadores;
+          }
+        } catch (e) {
+          console.log("No se pudo conectar con Sheet para traer nombres, usando genéricos.");
+        }
+      }
 
+      // Si no se encontraron nombres o no hay conexión, usa genéricos
+      if (jugadores.length === 0) {
+        jugadores = ["Jugador A", "Jugador B", "Jugador C", "Jugador D", "Jugador E"];
+      }
+
+      let turnos = [...jugadores];
+      for (let i = 1; i <= numEne; i++) {
+        turnos.push(`Enemigo ${i}`);
+      }
+
+      // Mezclar turnos al azar
       for (let i = turnos.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [turnos[i], turnos[j]] = [turnos[j], turnos[i]];
