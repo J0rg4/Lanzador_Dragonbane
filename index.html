@@ -144,24 +144,28 @@
   <div class="card">
     <h2>⚔️ Tirada de Daño</h2>
     <div class="row">
+      <div class="col" style="flex: 0.6;">
+        <label>Cant. Dados</label>
+        <input type="number" id="weapon-count" value="1" min="1" max="10">
+      </div>
       <div class="col">
-        <label>Dado de Arma (Base)</label>
+        <label>Tipo de Dado Base</label>
         <select id="weapon-dice">
-          <option value="4">1 D4</option>
-          <option value="6">1 D6</option>
-          <option value="8" selected>1 D8</option>
-          <option value="10">1 D10</option>
-          <option value="12">1 D12</option>
+          <option value="4">D4</option>
+          <option value="6">D6</option>
+          <option value="8" selected>D8</option>
+          <option value="10">D10</option>
+          <option value="12">D12</option>
         </select>
       </div>
-      <div class="col">
-        <label>Dado Extra de Daño</label>
-        <select id="extra-damage">
-          <option value="0">Ninguno</option>
-          <option value="4">+ 1 D4</option>
-          <option value="6">+ 1 D6</option>
-        </select>
-      </div>
+    </div>
+    <div>
+      <label>Dado Extra de Daño (Bono)</label>
+      <select id="extra-damage">
+        <option value="0">Ninguno</option>
+        <option value="4">+ 1 D4</option>
+        <option value="6">+ 1 D6</option>
+      </select>
     </div>
     <button class="btn-main" onclick="rollDamage()">Tirar Daño</button>
   </div>
@@ -253,14 +257,22 @@
     }
 
     function rollDamage() {
+      const count = Math.max(1, parseInt(document.getElementById('weapon-count').value) || 1);
       const weaponFaces = parseInt(document.getElementById('weapon-dice').value);
       const extraFaces = parseInt(document.getElementById('extra-damage').value);
       const player = getPlayerName();
 
-      let weaponRoll = Math.floor(Math.random() * weaponFaces) + 1;
-      let totalSum = weaponRoll;
-      let rollDesc = `1D${weaponFaces}: [${weaponRoll}]`;
-      let diceHeader = `1D${weaponFaces}`;
+      let weaponRolls = [];
+      let totalSum = 0;
+
+      for (let i = 0; i < count; i++) {
+        let r = Math.floor(Math.random() * weaponFaces) + 1;
+        weaponRolls.push(r);
+        totalSum += r;
+      }
+
+      let rollDesc = `${count}D${weaponFaces}: [${weaponRolls.join(', ')}]`;
+      let diceHeader = `${count}D${weaponFaces}`;
 
       if (extraFaces > 0) {
         let extraRoll = Math.floor(Math.random() * extraFaces) + 1;
